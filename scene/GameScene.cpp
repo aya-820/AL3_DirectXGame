@@ -1,7 +1,7 @@
 #include "GameScene.h"
+#include "MathUtilityForText.h"
 #include "TextureManager.h"
 #include <cassert>
-#include "MathUtilityForText.h"
 
 // コンストラクタ
 GameScene::GameScene() {}
@@ -10,6 +10,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {
 	delete spriteBG_;
 	delete modelStage_;
+	delete modelPlayer_;
 }
 
 // 初期化
@@ -32,19 +33,25 @@ void GameScene::Initialize() {
 	textureHandleStage_ = TextureManager::Load("stage.jpg");
 	modelStage_ = Model::Create();
 	worldTrandformStage_.Initialize();
-	//ステージの位置を変更
+	// ステージの位置を変更
 	worldTrandformStage_.translation_ = {0, -1.5f, 0};
 	worldTrandformStage_.scale_ = {4.5f, 1, 40};
-	//変換行列を更新
+	// 変換行列を更新
 	worldTrandformStage_.matWorld_ = MakeAffineMatrix(
 	    worldTrandformStage_.scale_, worldTrandformStage_.rotation_,
 	    worldTrandformStage_.translation_);
-	//変換行列をバッファに転送
+	// 変換行列をバッファに転送
 	worldTrandformStage_.TransferMatrix();
+
+	// プレイヤー
+	textureHandlePlayer_ = TextureManager::Load("player.png");
+	modelPlayer_ = Model::Create();
+	worldTransformPlayer_.scale_ = {0.5f, 0.5f, 0.5f};
+	worldTransformPlayer_.Initialize();
 }
 
 // 更新
-void GameScene::Update() {}
+void GameScene::Update() { PlayerUpdate(); }
 
 // 描画
 void GameScene::Draw() {
@@ -80,6 +87,9 @@ void GameScene::Draw() {
 	// ステージ
 	modelStage_->Draw(worldTrandformStage_, viewProjection_, textureHandleStage_);
 
+	// プレイヤー
+	modelPlayer_->Draw(worldTransformPlayer_, viewProjection_, textureHandlePlayer_);
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
@@ -96,4 +106,19 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+//--------------------------------------------------
+//プレイヤー
+//--------------------------------------------------
+
+//プレイヤー更新
+void GameScene::PlayerUpdate() {
+	//変換行列を更新
+	worldTransformPlayer_.matWorld_ = MakeAffineMatrix(
+	    worldTransformPlayer_.scale_, 
+		worldTransformPlayer_.rotation_,
+	    worldTransformPlayer_.translation_);
+	//変換行列を定数バッファに転送
+	worldTransformPlayer_.TransferMatrix();
 }
