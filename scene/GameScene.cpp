@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include "MathUtilityForText.h"
 
 // コンストラクタ
 GameScene::GameScene() {}
@@ -31,6 +32,15 @@ void GameScene::Initialize() {
 	textureHandleStage_ = TextureManager::Load("stage.jpg");
 	modelStage_ = Model::Create();
 	worldTrandformStage_.Initialize();
+	//ステージの位置を変更
+	worldTrandformStage_.translation_ = {0, -1.5f, 0};
+	worldTrandformStage_.scale_ = {4.5f, 1, 40};
+	//変換行列を更新
+	worldTrandformStage_.matWorld_ = MakeAffineMatrix(
+	    worldTrandformStage_.scale_, worldTrandformStage_.rotation_,
+	    worldTrandformStage_.translation_);
+	//変換行列をバッファに転送
+	worldTrandformStage_.TransferMatrix();
 }
 
 // 更新
