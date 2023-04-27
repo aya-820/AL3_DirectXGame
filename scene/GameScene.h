@@ -56,18 +56,18 @@ private: // メンバ変数
 	// ビュープロジェクション(共通)
 	ViewProjection viewProjection_;
 
-	//ステージ
+	// ステージ
 	uint32_t textureHandleStage_ = 0;
 	Model* modelStage_ = nullptr;
 	WorldTransform worldTrandformStage_;
 
-	//プレイヤー
+	// プレイヤー
 	uint32_t textureHandlePlayer_ = 0;
 	Model* modelPlayer_ = nullptr;
 	WorldTransform worldTransformPlayer_;
-	void PlayerUpdate();	//プレイヤー更新
+	void PlayerUpdate(); // プレイヤー更新
 
-	//ビーム
+	// ビーム
 	uint32_t textureHandleBeam_ = 0;
 	Model* modelBeam_ = nullptr;
 	WorldTransform worldTransformBeam_;
@@ -75,4 +75,15 @@ private: // メンバ変数
 	void BeamMove_();
 	void BeamBorn_();
 	int BeamFlag_ = 0;
+
+	// エネミー
+	uint32_t textureHandleEnemy_ = 0;
+	Model* modelEnemy_ = nullptr;
+	WorldTransform worldTransformEnemy_;
+	void EnemyUpdate_();
+	void EnemyMove_();
+	void EnemyBorn_();
+	int enemyFlag_ = 0;
+	int enemyBornX_;
+	float enemyBornX2_;
 };

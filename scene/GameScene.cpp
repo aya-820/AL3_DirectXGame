@@ -2,6 +2,7 @@
 #include "MathUtilityForText.h"
 #include "TextureManager.h"
 #include <cassert>
+#include <time.h>
 
 // コンストラクタ
 GameScene::GameScene() {}
@@ -12,6 +13,7 @@ GameScene::~GameScene() {
 	delete modelStage_;
 	delete modelPlayer_;
 	delete modelBeam_;
+	delete modelEnemy_;
 }
 
 // 初期化
@@ -53,14 +55,24 @@ void GameScene::Initialize() {
 	// ビーム
 	textureHandleBeam_ = TextureManager::Load("beam.png");
 	modelBeam_ = Model::Create();
-	worldTransformBeam_.scale_ = {0.3f, 0.3f, 0.3f};
+	worldTransformBeam_.scale_ = {0.5f, 0.5f, 0.5f};
 	worldTransformBeam_.Initialize();
+
+	// エネミー
+	textureHandleEnemy_ = TextureManager::Load("enemy.png");
+	modelEnemy_ = Model::Create();
+	worldTransformEnemy_.scale_ = {0.5f, 0.5f, 0.5f};
+	worldTransformEnemy_.Initialize();
+
+	//time.h
+	srand((unsigned int)time(NULL));
 }
 
 // 更新
 void GameScene::Update() {
 	PlayerUpdate();
 	BeamUpdate_();
+	EnemyUpdate_();
 }
 
 // 描画
@@ -103,6 +115,11 @@ void GameScene::Draw() {
 	// ビーム
 	if (BeamFlag_ == 1) {
 		modelBeam_->Draw(worldTransformBeam_, viewProjection_, textureHandleBeam_);
+	}
+
+	// エネミー
+	if (enemyFlag_==1) {
+	modelEnemy_->Draw(worldTransformEnemy_, viewProjection_, textureHandleEnemy_);
 	}
 
 	// 3Dオブジェクト描画後処理
@@ -153,6 +170,11 @@ void GameScene::PlayerUpdate() {
 	worldTransformPlayer_.TransferMatrix();
 }
 
+//--------------------------------------------------
+// ビーム
+//--------------------------------------------------
+
+// ビーム更新
 void GameScene::BeamUpdate_() {
 	// 移動
 	BeamMove_();
@@ -171,7 +193,7 @@ void GameScene::BeamUpdate_() {
 // ビーム移動
 void GameScene::BeamMove_() {
 	if (BeamFlag_ == 1) {
-		worldTransformBeam_.translation_.z += 0.5f;
+		worldTransformBeam_.translation_.z += 0.7f;
 
 		// 回転
 		worldTransformBeam_.rotation_.x += 0.1f;
@@ -189,5 +211,50 @@ void GameScene::BeamBorn_() {
 		worldTransformBeam_.translation_.y = worldTransformPlayer_.translation_.y;
 		worldTransformBeam_.translation_.z = worldTransformPlayer_.translation_.z;
 		BeamFlag_ = 1;
+	}
+}
+
+//--------------------------------------------------
+// エネミー
+//--------------------------------------------------
+
+// エネミー更新
+void GameScene::EnemyUpdate_() {
+	//移動
+	EnemyMove_();
+
+	//発生
+	EnemyBorn_();
+
+	if (input_->PushKey(DIK_E)) {
+		enemyFlag_ = 0;
+	}
+
+	// 変換行列を更新
+	worldTransformEnemy_.matWorld_ = MakeAffineMatrix(
+	    worldTransformEnemy_.scale_, worldTransformEnemy_.rotation_,
+	    worldTransformEnemy_.translation_);
+	// 変換行列を定数バッファに転送
+	worldTransformEnemy_.TransferMatrix();
+}
+
+// エネミー移動
+void GameScene::EnemyMove_() {
+	if (enemyFlag_ == 1) {
+		worldTransformEnemy_.translation_.z -= 0.3f;
+		// 回転
+		worldTransformEnemy_.rotation_.x -= 0.1f;
+	}
+}
+
+//エネミー発生
+void GameScene::EnemyBorn_() {
+	if (enemyFlag_ == 0) {
+		enemyFlag_ = 1;
+		worldTransformEnemy_.translation_.z = 40.0f;
+
+		enemyBornX_ = rand() % 80;
+		enemyBornX2_ = (float)enemyBornX_ / 10 - 4;
+		worldTransformEnemy_.translation_.x = enemyBornX2_;
 	}
 }
