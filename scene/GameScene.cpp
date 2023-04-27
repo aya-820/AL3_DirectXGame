@@ -109,16 +109,34 @@ void GameScene::Draw() {
 }
 
 //--------------------------------------------------
-//プレイヤー
+// プレイヤー
 //--------------------------------------------------
 
-//プレイヤー更新
+// プレイヤー更新
 void GameScene::PlayerUpdate() {
-	//変換行列を更新
+	// 移動
+
+	// 右へ移動
+	if (input_->PushKey(DIK_RIGHT)) {
+		worldTransformPlayer_.translation_.x += 0.1f;
+	}
+
+	// 左へ移動
+	if (input_->PushKey(DIK_LEFT)) {
+		worldTransformPlayer_.translation_.x -= 0.1f;
+	}
+
+	//// 移動範囲を制限
+	//if (worldTransformPlayer_.translation_.x > 4.0f) {
+	//	worldTransformPlayer_.translation_.x = 4.0f;
+	//} else if (worldTransformPlayer_.translation_.x < -4.0f) {
+	//	worldTransformPlayer_.translation_.x = -4.0f;
+	//}
+
+	// 変換行列を更新
 	worldTransformPlayer_.matWorld_ = MakeAffineMatrix(
-	    worldTransformPlayer_.scale_, 
-		worldTransformPlayer_.rotation_,
+	    worldTransformPlayer_.scale_, worldTransformPlayer_.rotation_,
 	    worldTransformPlayer_.translation_);
-	//変換行列を定数バッファに転送
+	// 変換行列を定数バッファに転送
 	worldTransformPlayer_.TransferMatrix();
 }
