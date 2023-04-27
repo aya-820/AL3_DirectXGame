@@ -11,6 +11,7 @@ GameScene::~GameScene() {
 	delete spriteBG_;
 	delete modelStage_;
 	delete modelPlayer_;
+	delete modelBeam_;
 }
 
 // 初期化
@@ -48,10 +49,19 @@ void GameScene::Initialize() {
 	modelPlayer_ = Model::Create();
 	worldTransformPlayer_.scale_ = {0.5f, 0.5f, 0.5f};
 	worldTransformPlayer_.Initialize();
+
+	// ビーム
+	textureHandleBeam_ = TextureManager::Load("beam.png");
+	modelBeam_ = Model::Create();
+	worldTransformBeam_.scale_ = {0.3f, 0.3f, 0.3f};
+	worldTransformBeam_.Initialize();
 }
 
 // 更新
-void GameScene::Update() { PlayerUpdate(); }
+void GameScene::Update() {
+	PlayerUpdate();
+	BeamUpdate_();
+}
 
 // 描画
 void GameScene::Draw() {
@@ -90,6 +100,11 @@ void GameScene::Draw() {
 	// プレイヤー
 	modelPlayer_->Draw(worldTransformPlayer_, viewProjection_, textureHandlePlayer_);
 
+	// ビーム
+	if (BeamFlag_ == 1) {
+		modelBeam_->Draw(worldTransformBeam_, viewProjection_, textureHandleBeam_);
+	}
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
@@ -126,12 +141,9 @@ void GameScene::PlayerUpdate() {
 		worldTransformPlayer_.translation_.x -= 0.1f;
 	}
 
-	//// 移動範囲を制限
-	//if (worldTransformPlayer_.translation_.x > 4.0f) {
-	//	worldTransformPlayer_.translation_.x = 4.0f;
-	//} else if (worldTransformPlayer_.translation_.x < -4.0f) {
-	//	worldTransformPlayer_.translation_.x = -4.0f;
-	//}
+	// 移動範囲を制限
+	worldTransformPlayer_.translation_.x = min(worldTransformPlayer_.translation_.x, 4.0f);
+	worldTransformPlayer_.translation_.x = max(worldTransformPlayer_.translation_.x, -4.0f);
 
 	// 変換行列を更新
 	worldTransformPlayer_.matWorld_ = MakeAffineMatrix(
@@ -139,4 +151,43 @@ void GameScene::PlayerUpdate() {
 	    worldTransformPlayer_.translation_);
 	// 変換行列を定数バッファに転送
 	worldTransformPlayer_.TransferMatrix();
+}
+
+void GameScene::BeamUpdate_() {
+	// 移動
+	BeamMove_();
+
+	// 発生
+	BeamBorn_();
+
+	// 変換行列を更新
+	worldTransformBeam_.matWorld_ = MakeAffineMatrix(
+	    worldTransformBeam_.scale_, worldTransformBeam_.rotation_,
+	    worldTransformBeam_.translation_);
+	// 変換行列を定数バッファに転送
+	worldTransformBeam_.TransferMatrix();
+}
+
+// ビーム移動
+void GameScene::BeamMove_() {
+	if (BeamFlag_ == 1) {
+		worldTransformBeam_.translation_.z += 0.5f;
+
+		// 回転
+		worldTransformBeam_.rotation_.x += 0.1f;
+
+		if (worldTransformBeam_.translation_.z > 40.0f) {
+			BeamFlag_ = 0;
+		}
+	}
+}
+
+// ビーム発生
+void GameScene::BeamBorn_() {
+	if (input_->PushKey(DIK_SPACE)) {
+		worldTransformBeam_.translation_.x = worldTransformPlayer_.translation_.x;
+		worldTransformBeam_.translation_.y = worldTransformPlayer_.translation_.y;
+		worldTransformBeam_.translation_.z = worldTransformPlayer_.translation_.z;
+		BeamFlag_ = 1;
+	}
 }
