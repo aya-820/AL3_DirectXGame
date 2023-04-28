@@ -73,12 +73,7 @@ void GameScene::Initialize() {
 }
 
 // 更新
-void GameScene::Update() {
-	PlayerUpdate();
-	BeamUpdate_();
-	EnemyUpdate_();
-	Collision();
-}
+void GameScene::Update() { GamePlayUpdate(); }
 
 // 描画
 void GameScene::Draw() {
@@ -94,8 +89,7 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
-	// 背景
-	spriteBG_->Draw();
+	GamePlayDrow2DBack();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -111,21 +105,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	// ステージ
-	modelStage_->Draw(worldTrandformStage_, viewProjection_, textureHandleStage_);
-
-	// プレイヤー
-	modelPlayer_->Draw(worldTransformPlayer_, viewProjection_, textureHandlePlayer_);
-
-	// ビーム
-	if (BeamFlag_ == 1) {
-		modelBeam_->Draw(worldTransformBeam_, viewProjection_, textureHandleBeam_);
-	}
-
-	// エネミー
-	if (enemyFlag_ == 1) {
-		modelEnemy_->Draw(worldTransformEnemy_, viewProjection_, textureHandleEnemy_);
-	}
+	GamePlayDrow3D();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -139,19 +119,7 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
-	//デバッグテキスト
-	debugText_->Print("AAA", 10, 10, 2);
-
-	//ゲームスコア
-	char str[100];
-	sprintf_s(str, "SCORE:%d", gameScore_);
-	debugText_->Print(str, 200, 10, 2);
-
-	//プレイヤーライフ
-	char str2[100];
-	sprintf_s(str2, "LIFE:%d", playerLife);
-	debugText_->Print(str2, 400, 10, 2);
-
+	GamePlayDrow2DNear();
 	debugText_->DrawAll();
 
 	// スプライト描画後処理
@@ -195,12 +163,12 @@ void GameScene::PlayerUpdate() {
 //--------------------------------------------------
 
 // ビーム更新
-void GameScene::BeamUpdate_() {
+void GameScene::BeamUpdate() {
 	// 移動
-	BeamMove_();
+	BeamMove();
 
 	// 発生
-	BeamBorn_();
+	BeamBorn();
 
 	// 変換行列を更新
 	worldTransformBeam_.matWorld_ = MakeAffineMatrix(
@@ -211,7 +179,7 @@ void GameScene::BeamUpdate_() {
 }
 
 // ビーム移動
-void GameScene::BeamMove_() {
+void GameScene::BeamMove() {
 	if (BeamFlag_ == 1) {
 		worldTransformBeam_.translation_.z += 0.7f;
 
@@ -225,7 +193,7 @@ void GameScene::BeamMove_() {
 }
 
 // ビーム発生
-void GameScene::BeamBorn_() {
+void GameScene::BeamBorn() {
 	if (input_->PushKey(DIK_SPACE)) {
 		worldTransformBeam_.translation_.x = worldTransformPlayer_.translation_.x;
 		worldTransformBeam_.translation_.y = worldTransformPlayer_.translation_.y;
@@ -239,12 +207,12 @@ void GameScene::BeamBorn_() {
 //--------------------------------------------------
 
 // エネミー更新
-void GameScene::EnemyUpdate_() {
+void GameScene::EnemyUpdate() {
 	// 移動
-	EnemyMove_();
+	EnemyMove();
 
 	// 発生
-	EnemyBorn_();
+	EnemyBorn();
 
 	if (input_->PushKey(DIK_E) || worldTransformEnemy_.translation_.z <= -10.0f) {
 		enemyFlag_ = 0;
@@ -259,7 +227,7 @@ void GameScene::EnemyUpdate_() {
 }
 
 // エネミー移動
-void GameScene::EnemyMove_() {
+void GameScene::EnemyMove() {
 	if (enemyFlag_ == 1) {
 		worldTransformEnemy_.translation_.z -= 0.3f;
 		// 回転
@@ -268,7 +236,7 @@ void GameScene::EnemyMove_() {
 }
 
 // エネミー発生
-void GameScene::EnemyBorn_() {
+void GameScene::EnemyBorn() {
 	if (enemyFlag_ == 0) {
 		enemyFlag_ = 1;
 		worldTransformEnemy_.translation_.z = 40.0f;
@@ -324,4 +292,57 @@ void GameScene::CollisionBeamEnemy() {
 			gameScore_++;
 		}
 	}
+}
+
+//--------------------------------------------------
+// プログラム整理
+//--------------------------------------------------
+
+//ゲームプレイ更新
+void GameScene::GamePlayUpdate() { 
+	PlayerUpdate();	// プレイヤー更新
+	EnemyUpdate();	// エネミー更新
+	BeamUpdate();	// ビーム更新
+	Collision();	// 衝突判定
+}
+
+//ゲームプレイ3D表示
+void GameScene::GamePlayDrow3D() {
+	// ステージ
+	modelStage_->Draw(worldTrandformStage_, viewProjection_, textureHandleStage_);
+
+	// プレイヤー
+	modelPlayer_->Draw(worldTransformPlayer_, viewProjection_, textureHandlePlayer_);
+
+	// ビーム
+	if (BeamFlag_ == 1) {
+		modelBeam_->Draw(worldTransformBeam_, viewProjection_, textureHandleBeam_);
+	}
+
+	// エネミー
+	if (enemyFlag_ == 1) {
+		modelEnemy_->Draw(worldTransformEnemy_, viewProjection_, textureHandleEnemy_);
+	}
+}
+
+//ゲームプレイ背景2D表示
+void GameScene::GamePlayDrow2DBack() { 
+	// 背景
+	spriteBG_->Draw();
+}
+
+//ゲームプレイ近景2D表示
+void GameScene::GamePlayDrow2DNear() {
+	// デバッグテキスト
+	debugText_->Print("AAA", 10, 10, 2);
+
+	// ゲームスコア
+	char str[100];
+	sprintf_s(str, "SCORE:%d", gameScore_);
+	debugText_->Print(str, 200, 10, 2);
+
+	// プレイヤーライフ
+	char str2[100];
+	sprintf_s(str2, "LIFE:%d", playerLife);
+	debugText_->Print(str2, 400, 10, 2);
 }

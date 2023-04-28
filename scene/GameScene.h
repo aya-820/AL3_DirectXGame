@@ -72,18 +72,18 @@ private: // メンバ変数
 	uint32_t textureHandleBeam_ = 0;
 	Model* modelBeam_ = nullptr;
 	WorldTransform worldTransformBeam_;
-	void BeamUpdate_();
-	void BeamMove_();
-	void BeamBorn_();
+	void BeamUpdate();
+	void BeamMove();
+	void BeamBorn();
 	int BeamFlag_ = 0;
 
 	// エネミー
 	uint32_t textureHandleEnemy_ = 0;
 	Model* modelEnemy_ = nullptr;
 	WorldTransform worldTransformEnemy_;
-	void EnemyUpdate_();
-	void EnemyMove_();
-	void EnemyBorn_();
+	void EnemyUpdate();
+	void EnemyMove();
+	void EnemyBorn();
 	int enemyFlag_ = 0;
 
 	//衝突判定
@@ -94,4 +94,13 @@ private: // メンバ変数
 	//デバッグテキスト
 	DebugText* debugText_ = nullptr;
 	int gameScore_ = 0 /* ゲームスコア*/, playerLife = 3; /*プレイヤーライフ*/
+
+	//プログラム整理用関数
+	void GamePlayUpdate();		//ゲームプレイ更新
+	void GamePlayDrow3D();		//ゲームプレイ3D表示
+	void GamePlayDrow2DBack();	//ゲームプレイ背景2D表示
+	void GamePlayDrow2DNear();	//ゲームプレイ近景2D表示
+
+	//シート切り替え
+	int sceneMode_ = 0;
 };
