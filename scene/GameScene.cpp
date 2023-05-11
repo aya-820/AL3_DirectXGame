@@ -14,6 +14,8 @@ GameScene::~GameScene() {
 	delete modelPlayer_;
 	delete modelBeam_;
 	delete modelEnemy_;
+	delete spriteTitle_;
+	delete spriteEnter_;
 }
 
 // 初期化
@@ -24,52 +26,82 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	// BG(2dスプライト)
-	textureHandleBG_ = TextureManager::Load("bg.jpg");
-	spriteBG_ = Sprite::Create(textureHandleBG_, {0, 0});
+	{
+		textureHandleBG_ = TextureManager::Load("bg.jpg");
+		spriteBG_ = Sprite::Create(textureHandleBG_, {0, 0});
+	}
 
 	// ビュープロジェクションの初期化
-	viewProjection_.translation_.y = 1;
-	viewProjection_.translation_.z = -6;
-	viewProjection_.Initialize();
+	{
+		viewProjection_.translation_.y = 1;
+		viewProjection_.translation_.z = -6;
+		viewProjection_.Initialize();
+	}
 
 	// ステージ
-	textureHandleStage_ = TextureManager::Load("stage.jpg");
-	modelStage_ = Model::Create();
-	worldTrandformStage_.Initialize();
-	// ステージの位置を変更
-	worldTrandformStage_.translation_ = {0, -1.5f, 0};
-	worldTrandformStage_.scale_ = {4.5f, 1, 40};
-	// 変換行列を更新
-	worldTrandformStage_.matWorld_ = MakeAffineMatrix(
-	    worldTrandformStage_.scale_, worldTrandformStage_.rotation_,
-	    worldTrandformStage_.translation_);
-	// 変換行列をバッファに転送
-	worldTrandformStage_.TransferMatrix();
+	{
+		textureHandleStage_ = TextureManager::Load("stage.jpg");
+		modelStage_ = Model::Create();
+		worldTrandformStage_.Initialize();
+		// ステージの位置を変更
+		worldTrandformStage_.translation_ = {0, -1.5f, 0};
+		worldTrandformStage_.scale_ = {4.5f, 1, 40};
+		// 変換行列を更新
+		worldTrandformStage_.matWorld_ = MakeAffineMatrix(
+		    worldTrandformStage_.scale_, worldTrandformStage_.rotation_,
+		    worldTrandformStage_.translation_);
+		// 変換行列をバッファに転送
+		worldTrandformStage_.TransferMatrix();
+	}
 
 	// プレイヤー
-	textureHandlePlayer_ = TextureManager::Load("player.png");
-	modelPlayer_ = Model::Create();
-	worldTransformPlayer_.scale_ = {0.5f, 0.5f, 0.5f};
-	worldTransformPlayer_.Initialize();
+	{
+		textureHandlePlayer_ = TextureManager::Load("player.png");
+		modelPlayer_ = Model::Create();
+		worldTransformPlayer_.scale_ = {0.5f, 0.5f, 0.5f};
+		worldTransformPlayer_.Initialize();
+	}
 
 	// ビーム
-	textureHandleBeam_ = TextureManager::Load("beam.png");
-	modelBeam_ = Model::Create();
-	worldTransformBeam_.scale_ = {0.5f, 0.5f, 0.5f};
-	worldTransformBeam_.Initialize();
+	{
+		textureHandleBeam_ = TextureManager::Load("beam.png");
+		modelBeam_ = Model::Create();
+		worldTransformBeam_.scale_ = {0.5f, 0.5f, 0.5f};
+		worldTransformBeam_.Initialize();
+	}
 
 	// エネミー
-	textureHandleEnemy_ = TextureManager::Load("enemy.png");
-	modelEnemy_ = Model::Create();
-	worldTransformEnemy_.scale_ = {0.5f, 0.5f, 0.5f};
-	worldTransformEnemy_.Initialize();
+	{
+		textureHandleEnemy_ = TextureManager::Load("enemy.png");
+		modelEnemy_ = Model::Create();
+		worldTransformEnemy_.scale_ = {0.5f, 0.5f, 0.5f};
+		worldTransformEnemy_.Initialize();
+	}
 
 	// time.h
-	srand((unsigned int)time(NULL));
+	{ srand((unsigned int)time(NULL)); }
 
 	// デバッグテキスト
-	debugText_ = DebugText::GetInstance();
-	debugText_->Initialize();
+	{
+		debugText_ = DebugText::GetInstance();
+		debugText_->Initialize();
+	}
+
+	// タイトル(2Dスプライト)
+	{
+		textureHandleTitle_ = TextureManager::Load("title.png");
+		spriteTitle_ = Sprite::Create(textureHandleTitle_, {0, 0});
+
+		textureHandleEnter_ = TextureManager::Load("enter.png");
+		spriteEnter_ = Sprite::Create(textureHandleEnter_, {390, 500});
+		gameTimer_ = 0;
+	}
+
+	// ゲームオーバー
+	{
+		textureHandleGameover_ = TextureManager::Load("gameover.png");
+		spriteGameover_ = Sprite::Create(textureHandleGameover_, {0, 0});
+	}
 }
 
 // 更新
@@ -78,6 +110,11 @@ void GameScene::Update() {
 	case 0:
 		GamePlayUpdate();
 		break;
+	case 1:
+		TitleUpdate();
+		break;
+	case 2:
+		gameoverUpdate();
 	}
 }
 
@@ -117,7 +154,7 @@ void GameScene::Draw() {
 
 	switch (sceneMode_) {
 	case 0:
-	GamePlayDrow3D();
+		GamePlayDrow3D();
 		break;
 	}
 
@@ -135,8 +172,13 @@ void GameScene::Draw() {
 
 	switch (sceneMode_) {
 	case 0:
-	GamePlayDrow2DNear();
+		GamePlayDrow2DNear();
 		break;
+	case 1:
+		TitleDrow2Dnear();
+		break;
+	case 2:
+		gameoverDrow2Dnear();
 	}
 	debugText_->DrawAll();
 
@@ -290,7 +332,7 @@ void GameScene::CollisionPlayerEnemy() {
 		if (dx < 1 && dz < 1) {
 			// 存在しない
 			enemyFlag_ = 0;
-			playerLife--;
+			playerLife_--;
 		}
 	}
 }
@@ -322,6 +364,11 @@ void GameScene::GamePlayUpdate() {
 	EnemyUpdate();  // エネミー更新
 	BeamUpdate();   // ビーム更新
 	Collision();    // 衝突判定
+
+	if (playerLife_ <= 0) {
+		// モードをゲームオーバーへ変更
+		sceneMode_ = 2;
+	}
 }
 
 // ゲームプレイ3D表示
@@ -361,6 +408,61 @@ void GameScene::GamePlayDrow2DNear() {
 
 	// プレイヤーライフ
 	char str2[100];
-	sprintf_s(str2, "LIFE:%d", playerLife);
+	sprintf_s(str2, "LIFE:%d", playerLife_);
 	debugText_->Print(str2, 400, 10, 2);
+}
+
+//--------------------------------------------------
+// タイトル
+//--------------------------------------------------
+
+// タイトル更新
+void GameScene::TitleUpdate() {
+	gameTimer_++;
+	// エンターキーを押した瞬間
+	if (input_->TriggerKey(DIK_RETURN)) {
+		GamePlayStart();
+		// モードをゲームプレイへ変更
+		sceneMode_ = 0;
+	}
+}
+// タイトル表示
+void GameScene::TitleDrow2Dnear() {
+	spriteTitle_->Draw();
+	if (gameTimer_ % 40 >= 20) {
+		spriteEnter_->Draw();
+	}
+}
+
+//--------------------------------------------------
+// ゲームオーバー
+//--------------------------------------------------
+
+// ゲームオーバー更新
+void GameScene::gameoverUpdate() {
+	gameTimer_++;
+	// エンターキーを押した瞬間
+	if (input_->TriggerKey(DIK_RETURN)) {
+		// モードをタイトルへ変更
+		sceneMode_ = 1;
+	}
+}
+// ゲームオーバー表示
+void GameScene::gameoverDrow2Dnear() {
+	spriteGameover_->Draw();
+	if (gameTimer_ % 40 >= 20) {
+		spriteEnter_->Draw();
+	}
+}
+
+// ゲームプレイ初期化
+void GameScene::GamePlayStart() {
+	playerLife_ = 3;
+	gameScore_ = 0;
+	enemyFlag_ = 0;
+	BeamFlag_ = 0;
+	worldTransformPlayer_.translation_.x = 0.0f;
+	PlayerUpdate();
+	BeamUpdate();
+	EnemyUpdate();
 }

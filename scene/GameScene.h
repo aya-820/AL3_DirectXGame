@@ -93,7 +93,7 @@ private: // メンバ変数
 
 	//デバッグテキスト
 	DebugText* debugText_ = nullptr;
-	int gameScore_ = 0 /* ゲームスコア*/, playerLife = 3; /*プレイヤーライフ*/
+	int gameScore_ = 0 /* ゲームスコア*/, playerLife_ = 3; /*プレイヤーライフ*/
 
 	//プログラム整理用関数
 	void GamePlayUpdate();		//ゲームプレイ更新
@@ -102,5 +102,25 @@ private: // メンバ変数
 	void GamePlayDrow2DNear();	//ゲームプレイ近景2D表示
 
 	//シート切り替え
-	int sceneMode_ = 0; //シーンモード(0:ゲームプレイ　1:タイトル)
+	int sceneMode_ = 1; //シーンモード(0:ゲームプレイ　1:タイトル)
+
+	//タイトル
+	void TitleUpdate();		//タイトル更新
+	void TitleDrow2Dnear();	//タイトル2D
+	//タイトル(スプライト)
+	uint32_t textureHandleTitle_ = 0;
+	Sprite* spriteTitle_ = nullptr;
+	//タイトルエンター
+	uint32_t textureHandleEnter_ = 0;
+	Sprite* spriteEnter_ = nullptr;
+	int gameTimer_ = 0;
+
+	//ゲームオーバー
+	void gameoverUpdate();
+	void gameoverDrow2Dnear();
+	uint32_t textureHandleGameover_ = 0;
+	Sprite* spriteGameover_ = nullptr;
+
+	//ゲームプレイ初期化
+	void GamePlayStart();
 };
