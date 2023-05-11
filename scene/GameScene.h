@@ -80,11 +80,11 @@ private: // メンバ変数
 	// エネミー
 	uint32_t textureHandleEnemy_ = 0;
 	Model* modelEnemy_ = nullptr;
-	WorldTransform worldTransformEnemy_;
+	WorldTransform worldTransformEnemy_[10];
 	void EnemyUpdate();
 	void EnemyMove();
 	void EnemyBorn();
-	int enemyFlag_ = 0;
+	int enemyFlag_[10] = {};
 
 	//衝突判定
 	void Collision(); //衝突判定
