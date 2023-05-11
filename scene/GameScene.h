@@ -102,5 +102,5 @@ private: // メンバ変数
 	void GamePlayDrow2DNear();	//ゲームプレイ近景2D表示
 
 	//シート切り替え
-	int sceneMode_ = 0;
+	int sceneMode_ = 0; //シーンモード(0:ゲームプレイ　1:タイトル)
 };

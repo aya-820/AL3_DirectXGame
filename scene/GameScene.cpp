@@ -67,13 +67,19 @@ void GameScene::Initialize() {
 	// time.h
 	srand((unsigned int)time(NULL));
 
-	//デバッグテキスト
+	// デバッグテキスト
 	debugText_ = DebugText::GetInstance();
 	debugText_->Initialize();
 }
 
 // 更新
-void GameScene::Update() { GamePlayUpdate(); }
+void GameScene::Update() {
+	switch (sceneMode_) {
+	case 0:
+		GamePlayUpdate();
+		break;
+	}
+}
 
 // 描画
 void GameScene::Draw() {
@@ -89,7 +95,11 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
-	GamePlayDrow2DBack();
+	switch (sceneMode_) {
+	case 0:
+		GamePlayDrow2DBack();
+		break;
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -105,7 +115,11 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
+	switch (sceneMode_) {
+	case 0:
 	GamePlayDrow3D();
+		break;
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -119,7 +133,11 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	switch (sceneMode_) {
+	case 0:
 	GamePlayDrow2DNear();
+		break;
+	}
 	debugText_->DrawAll();
 
 	// スプライト描画後処理
@@ -298,15 +316,15 @@ void GameScene::CollisionBeamEnemy() {
 // プログラム整理
 //--------------------------------------------------
 
-//ゲームプレイ更新
-void GameScene::GamePlayUpdate() { 
-	PlayerUpdate();	// プレイヤー更新
-	EnemyUpdate();	// エネミー更新
-	BeamUpdate();	// ビーム更新
-	Collision();	// 衝突判定
+// ゲームプレイ更新
+void GameScene::GamePlayUpdate() {
+	PlayerUpdate(); // プレイヤー更新
+	EnemyUpdate();  // エネミー更新
+	BeamUpdate();   // ビーム更新
+	Collision();    // 衝突判定
 }
 
-//ゲームプレイ3D表示
+// ゲームプレイ3D表示
 void GameScene::GamePlayDrow3D() {
 	// ステージ
 	modelStage_->Draw(worldTrandformStage_, viewProjection_, textureHandleStage_);
@@ -325,13 +343,13 @@ void GameScene::GamePlayDrow3D() {
 	}
 }
 
-//ゲームプレイ背景2D表示
-void GameScene::GamePlayDrow2DBack() { 
+// ゲームプレイ背景2D表示
+void GameScene::GamePlayDrow2DBack() {
 	// 背景
 	spriteBG_->Draw();
 }
 
-//ゲームプレイ近景2D表示
+// ゲームプレイ近景2D表示
 void GameScene::GamePlayDrow2DNear() {
 	// デバッグテキスト
 	debugText_->Print("AAA", 10, 10, 2);
