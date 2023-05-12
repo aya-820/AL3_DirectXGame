@@ -107,6 +107,19 @@ void GameScene::Initialize() {
 		textureHandleGameover_ = TextureManager::Load("gameover.png");
 		spriteGameover_ = Sprite::Create(textureHandleGameover_, {0, 0});
 	}
+
+	// サウンド
+	{
+		// サウンドデータ読み込み
+		soundDateHandleTitleBGM_ = audio_->LoadWave("Audio/Ring05.wav");
+		soundDateHandleGamePlayBGM_ = audio_->LoadWave("Audio/Ring08.wav");
+		soundDateHandleGameOverBGM_ = audio_->LoadWave("Audio/Ring09.wav");
+		soundDateHandleEnemyHitSE_ = audio_->LoadWave("Audio/chord.wav");
+		soundDateHandlePlayerHitSE_ = audio_->LoadWave("Audio/tada.wav");
+
+		// タイトルBGMを再生
+		voiceHandleBGM_ = audio_->PlayWave(soundDateHandleTitleBGM_, true);
+	}
 }
 
 // 更新
@@ -379,6 +392,9 @@ void GameScene::CollisionPlayerEnemy() {
 				// 存在しない
 				enemyFlag_[e] = 0;
 				playerLife_--;
+
+				// プレイヤーヒットSE
+				audio_->PlayWave(soundDateHandlePlayerHitSE_);
 			}
 		}
 	}
@@ -401,6 +417,9 @@ void GameScene::CollisionBeamEnemy() {
 					BeamFlag_[b] = 0;
 					enemyFlag_[e] = 0;
 					gameScore_++;
+
+					// エネミーヒットSE
+					audio_->PlayWave(soundDateHandleEnemyHitSE_);
 				}
 			}
 		}
@@ -421,6 +440,11 @@ void GameScene::GamePlayUpdate() {
 	if (playerLife_ <= 0) {
 		// モードをゲームオーバーへ変更
 		sceneMode_ = 2;
+
+		// BGM切り替え
+		audio_->StopWave(voiceHandleBGM_); // 現在のBGMを停止
+		voiceHandleBGM_ =
+		    audio_->PlayWave(soundDateHandleGameOverBGM_, true); // ゲームオーバーBGMを再生
 	}
 }
 
@@ -481,8 +505,14 @@ void GameScene::TitleUpdate() {
 		GamePlayStart();
 		// モードをゲームプレイへ変更
 		sceneMode_ = 0;
+
+		// BGM切り替え
+		audio_->StopWave(voiceHandleBGM_); // 現在のBGMを停止
+		voiceHandleBGM_ =
+		    audio_->PlayWave(soundDateHandleGamePlayBGM_, true); // ゲームプレイBGMを再生
 	}
 }
+
 // タイトル表示
 void GameScene::TitleDrow2Dnear() {
 	spriteTitle_->Draw();
@@ -502,8 +532,13 @@ void GameScene::gameoverUpdate() {
 	if (input_->TriggerKey(DIK_RETURN)) {
 		// モードをタイトルへ変更
 		sceneMode_ = 1;
+
+		// BGM切り替え
+		audio_->StopWave(voiceHandleBGM_);                                  // 現在のBGMを停止
+		voiceHandleBGM_ = audio_->PlayWave(soundDateHandleTitleBGM_, true); // タイトルBGMを再生
 	}
 }
+
 // ゲームオーバー表示
 void GameScene::gameoverDrow2Dnear() {
 	spriteGameover_->Draw();
