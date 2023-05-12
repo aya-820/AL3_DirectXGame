@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Audio.h"
+#include "DebugText.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
@@ -8,7 +9,6 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "DebugText.h"
 
 /// <summary>
 /// ゲームシーン
@@ -71,11 +71,12 @@ private: // メンバ変数
 	// ビーム
 	uint32_t textureHandleBeam_ = 0;
 	Model* modelBeam_ = nullptr;
-	WorldTransform worldTransformBeam_;
+	WorldTransform worldTransformBeam_[10];
 	void BeamUpdate();
 	void BeamMove();
 	void BeamBorn();
-	int BeamFlag_ = 0;
+	int BeamFlag_[10] = {};
+	int beamTimer_ = 0;
 
 	// エネミー
 	uint32_t textureHandleEnemy_ = 0;
@@ -85,42 +86,43 @@ private: // メンバ変数
 	void EnemyMove();
 	void EnemyBorn();
 	int enemyFlag_[10] = {};
+	float enemySpeed_[10] = {};
 
-	//衝突判定
-	void Collision(); //衝突判定
-	void CollisionPlayerEnemy(); //衝突判定(プレイヤーとエネミー)
-	void CollisionBeamEnemy(); // 衝突判定(ビームとエネミー)
+	// 衝突判定
+	void Collision();            // 衝突判定
+	void CollisionPlayerEnemy(); // 衝突判定(プレイヤーとエネミー)
+	void CollisionBeamEnemy();   // 衝突判定(ビームとエネミー)
 
-	//デバッグテキスト
+	// デバッグテキスト
 	DebugText* debugText_ = nullptr;
 	int gameScore_ = 0 /* ゲームスコア*/, playerLife_ = 3; /*プレイヤーライフ*/
 
-	//プログラム整理用関数
-	void GamePlayUpdate();		//ゲームプレイ更新
-	void GamePlayDrow3D();		//ゲームプレイ3D表示
-	void GamePlayDrow2DBack();	//ゲームプレイ背景2D表示
-	void GamePlayDrow2DNear();	//ゲームプレイ近景2D表示
+	// プログラム整理用関数
+	void GamePlayUpdate();     // ゲームプレイ更新
+	void GamePlayDrow3D();     // ゲームプレイ3D表示
+	void GamePlayDrow2DBack(); // ゲームプレイ背景2D表示
+	void GamePlayDrow2DNear(); // ゲームプレイ近景2D表示
 
-	//シート切り替え
-	int sceneMode_ = 1; //シーンモード(0:ゲームプレイ　1:タイトル)
+	// シート切り替え
+	int sceneMode_ = 1; // シーンモード(0:ゲームプレイ　1:タイトル)
 
-	//タイトル
-	void TitleUpdate();		//タイトル更新
-	void TitleDrow2Dnear();	//タイトル2D
-	//タイトル(スプライト)
+	// タイトル
+	void TitleUpdate();     // タイトル更新
+	void TitleDrow2Dnear(); // タイトル2D
+	// タイトル(スプライト)
 	uint32_t textureHandleTitle_ = 0;
 	Sprite* spriteTitle_ = nullptr;
-	//タイトルエンター
+	// タイトルエンター
 	uint32_t textureHandleEnter_ = 0;
 	Sprite* spriteEnter_ = nullptr;
 	int gameTimer_ = 0;
 
-	//ゲームオーバー
+	// ゲームオーバー
 	void gameoverUpdate();
 	void gameoverDrow2Dnear();
 	uint32_t textureHandleGameover_ = 0;
 	Sprite* spriteGameover_ = nullptr;
 
-	//ゲームプレイ初期化
+	// ゲームプレイ初期化
 	void GamePlayStart();
 };
