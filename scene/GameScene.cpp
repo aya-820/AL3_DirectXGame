@@ -154,8 +154,6 @@ void GameScene::Draw() {
 
 	switch (sceneMode_) {
 	case 0:
-		GamePlayDrow2DBack_();
-		break;
 	case 2:
 		GamePlayDrow2DBack_();
 		break;
@@ -177,8 +175,6 @@ void GameScene::Draw() {
 
 	switch (sceneMode_) {
 	case 0:
-		GamePlayDrow3D_();
-		break;
 	case 2:
 		GamePlayDrow3D_();
 		break;
