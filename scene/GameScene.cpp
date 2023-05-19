@@ -122,6 +122,23 @@ void GameScene::Initialize() {
 		// タイトルBGMを再生
 		voiceHandleBGM_ = audio_->PlayWave(soundDateHandleTitleBGM_, true);
 	}
+
+	// ゲームプレイUI(スプライト)
+	{
+		textureHandleNumber_ = TextureManager::Load("number.png");
+		for (int i = 0; i < 5; i++) {
+			spriteNumber_[i] = Sprite::Create(textureHandleNumber_, {300.0f + i * 26, 0});
+			spriteNumber_[i]->SetSize({32, 64});
+		}
+
+		textureHandleScore_ = TextureManager::Load("score.png");
+		spriteScore_ = Sprite::Create(textureHandleScore_, {160, 0});
+
+		for (int i = 0; i < 3; i++) {
+			spriteLife_[i] = Sprite::Create(textureHandlePlayer_, {800.0f + i * 60, 0});
+			spriteLife_[i]->SetSize({40, 40});
+		}
+	}
 }
 
 // 更新
@@ -237,6 +254,11 @@ void GameScene::StageUpdate_() {
 
 // プレイヤー更新
 void GameScene::PlayerUpdate_() {
+
+	if (playerTimer_ > 0) {
+		playerTimer_--;
+	}
+
 	// 移動
 
 	// 右へ移動
@@ -433,7 +455,7 @@ void GameScene::Collision_() {
 void GameScene::CollisionPlayerEnemy_() {
 	for (int e = 0; e < 10; e++) {
 		// エネミーが存在すれば
-		if (enemyFlag_[e] == 1) {
+		if (enemyFlag_[e] == 1 && playerTimer_ == 0) {
 			// 差を求める
 			float dx =
 			    abs(worldTransformPlayer_.translation_.x - worldTransformEnemy_[e].translation_.x);
@@ -442,10 +464,10 @@ void GameScene::CollisionPlayerEnemy_() {
 
 			// 衝突したら
 			if (dx < 1 && dz < 1) {
-				// 存在しない
 				enemyFlag_[e] = 2;
 				enemyJumpSpeed_[e] = 1.0f;
 				playerLife_--;
+				playerTimer_ = 60;
 
 				// プレイヤーヒットSE
 				audio_->PlayWave(soundDateHandlePlayerHitSE_);
@@ -482,7 +504,7 @@ void GameScene::CollisionBeamEnemy_() {
 }
 
 //--------------------------------------------------
-// プログラム整理
+// ゲームプレイ
 //--------------------------------------------------
 
 // ゲームプレイ更新
@@ -514,7 +536,9 @@ void GameScene::GamePlayDrow3D_() {
 	}
 
 	// プレイヤー
-	modelPlayer_->Draw(worldTransformPlayer_, viewProjection_, textureHandlePlayer_);
+	if (playerTimer_ % 4 < 2) {
+		modelPlayer_->Draw(worldTransformPlayer_, viewProjection_, textureHandlePlayer_);
+	}
 
 	// ビーム
 	for (int b = 0; b < 10; b++) {
@@ -539,18 +563,15 @@ void GameScene::GamePlayDrow2DBack_() {
 
 // ゲームプレイ近景2D表示
 void GameScene::GamePlayDrow2DNear_() {
-	// デバッグテキスト
-	debugText_->Print("AAA", 10, 10, 2);
+	// ゲームプレイUI(スプライト)
+	// スコア表示
+	DrowScore();
+	spriteScore_->Draw();
 
-	// ゲームスコア
-	char str[100];
-	sprintf_s(str, "SCORE:%d", gameScore_);
-	debugText_->Print(str, 200, 10, 2);
-
-	// プレイヤーライフ
-	char str2[100];
-	sprintf_s(str2, "LIFE:%d", playerLife_);
-	debugText_->Print(str2, 400, 10, 2);
+	// ライフ表示
+	for (int i = 0; i < playerLife_; i++) {
+		spriteLife_[i]->Draw();
+	}
 }
 
 //--------------------------------------------------
@@ -612,6 +633,7 @@ void GameScene::gameoverDrow2Dnear_() {
 // ゲームプレイ初期化
 void GameScene::GamePlayStart_() {
 	playerLife_ = 3;
+	playerTimer_ = 0;
 	gameScore_ = 0;
 	beamTimer_ = 0;
 	for (int i = 0; i < 10; i++) {
@@ -647,5 +669,27 @@ void GameScene::GamePlayStart_() {
 		    worldTransformEnemy_[i].translation_);
 		// 変換行列を定数バッファに転送
 		worldTransformEnemy_[i].TransferMatrix();
+	}
+}
+
+/// --------------------------------------------------
+/// ゲームプレイUI(スプライト)
+///--------------------------------------------------
+
+void GameScene::DrowScore() {
+	// 各桁の値を取り出す
+	int eachNumber[5] = {};  // 各桁の値
+	int number = gameScore_; // 表示する数字
+
+	int keta = 10000; // 最初の桁
+
+	for (int i = 0; i < 5; i++) {
+		eachNumber[i] = number / keta; // 今の桁の値を求める
+		number %= keta;                // 次の桁以下の値を取り出す
+		keta /= 10;                    // 桁を進める
+
+		// 各桁の数値を描画
+		spriteNumber_[i]->SetTextureRect({32.0f * eachNumber[i], 0}, {32, 64});
+		spriteNumber_[i]->Draw();
 	}
 }

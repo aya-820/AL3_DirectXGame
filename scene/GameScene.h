@@ -70,6 +70,7 @@ private: // メンバ変数
 	Model* modelPlayer_ = nullptr;
 	WorldTransform worldTransformPlayer_;
 	void PlayerUpdate_(); // プレイヤー更新
+	int playerTimer_ = 0;
 
 	// ビーム
 	uint32_t textureHandleBeam_ = 0;
@@ -137,4 +138,12 @@ private: // メンバ変数
 	uint32_t soundDateHandleEnemyHitSE_ = 0;  // 敵ヒットSE
 	uint32_t soundDateHandlePlayerHitSE_ = 0; // プレイヤーヒットSE
 	uint32_t voiceHandleBGM_;                 // 音声再生ハンドル
+
+	// ゲームプレイUI(スプライト)
+	uint32_t textureHandleNumber_ = 0;
+	Sprite* spriteNumber_[5] = {};
+	void DrowScore();
+	uint32_t textureHandleScore_ = 0;
+	Sprite* spriteScore_ = nullptr;
+	Sprite* spriteLife_[3] = {};
 };
