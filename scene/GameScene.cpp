@@ -6,7 +6,10 @@
 GameScene::GameScene() {}
 
 // デストラクタ
-GameScene::~GameScene() { delete stage_; }
+GameScene::~GameScene() {
+	delete stage_;
+	delete player_;
+}
 
 // 初期化
 void GameScene::Initialize() {
@@ -25,11 +28,16 @@ void GameScene::Initialize() {
 	// ステージ
 	stage_ = new Stage();
 	stage_->Initalize(viewProjection_);
+
+	// プレイヤー
+	player_ = new Player();
+	player_->Initalize(viewProjection_);
 }
 
 // 更新
 void GameScene::Update() {
-	stage_->Update(); // ステージ
+	stage_->Update();  // ステージ
+	player_->Update(); // プレイヤー
 }
 
 // 描画
@@ -63,6 +71,7 @@ void GameScene::Draw() {
 	/// </summary>
 
 	stage_->Droe3D();
+	player_->Drow3D();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
