@@ -18,6 +18,7 @@ public:
 	void Drow2DFar();                              // 2D背景描画
 	void Droe3D();                                 // 3D描画
 
+private:
 	// ビュープロジェクション(共通)
 	ViewProjection viewProjection_;
 

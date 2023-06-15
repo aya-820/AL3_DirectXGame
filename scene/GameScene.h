@@ -4,12 +4,13 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
-#include "Player.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
+#include "Beam.h"
+#include "Player.h"
 #include "stage.h"
 
 /// <summary>
@@ -58,4 +59,5 @@ private: // メンバ変数
 	// 各クラス
 	Stage* stage_ = nullptr;   // ステージ
 	Player* player_ = nullptr; // プレイヤー
+	Beam* beam_ = nullptr;     // ビーム
 };

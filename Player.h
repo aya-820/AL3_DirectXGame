@@ -18,6 +18,8 @@ public:
 	void Update();                                 // 更新
 	void Drow3D();                                 // 3D描画
 
+private:
+	// 変数
 	// ビュープロジェクション(共通)
 	ViewProjection viewProjection_;
 
@@ -28,4 +30,10 @@ public:
 
 	// インプットクラス
 	Input* input_ = nullptr;
+
+public:
+	// X座標の獲得
+	float GetX() { return worldTransformPlayer_.translation_.x; }
+	// Z座標の獲得
+	float GetZ() { return worldTransformPlayer_.translation_.z; }
 };
