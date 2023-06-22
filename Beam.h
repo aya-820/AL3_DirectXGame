@@ -16,12 +16,12 @@ public:
 	Beam();  // コンストラクタ
 	~Beam(); // デクリメント
 
-	void Initalize(ViewProjection viewProjection,Player* player); // 初期化
-	void Update();                                 // 更新
-	void Drow3D();                                 // 3D描画
+	void Initalize(ViewProjection viewProjection, Player* player); // 初期化
+	void Update();                                                 // 更新
+	void Drow3D();                                                 // 3D描画
 
-	void BeamMove_();	//移動
-	void BeamBorn_();	//発生
+	void BeamMove_(); // 移動
+	void BeamBorn_(); // 発生
 
 private:
 	// 変数
@@ -35,8 +35,8 @@ private:
 	int beamFlag_[10] = {};
 	int beamTimer_ = 0;
 
-	//インプットクラス
+	// インプットクラス
 	Input* input_ = nullptr;
-	//プレイヤー
+	// プレイヤー
 	Player* player_ = nullptr;
 };

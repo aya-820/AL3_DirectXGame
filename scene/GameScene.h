@@ -10,6 +10,7 @@
 #include "WorldTransform.h"
 
 #include "Beam.h"
+#include "Enemy.h"
 #include "Player.h"
 #include "stage.h"
 
@@ -60,4 +61,5 @@ private: // メンバ変数
 	Stage* stage_ = nullptr;   // ステージ
 	Player* player_ = nullptr; // プレイヤー
 	Beam* beam_ = nullptr;     // ビーム
+	Enemy* enemy_ = nullptr;   // エネミー
 };
