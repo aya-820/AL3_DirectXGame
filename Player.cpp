@@ -17,6 +17,7 @@ void Player::Initalize(ViewProjection viewProjection) {
 		modelPlayer_ = Model::Create();
 		worldTransformPlayer_.scale_ = {0.5f, 0.5f, 0.5f};
 		worldTransformPlayer_.Initialize();
+		playerLife_ = 3;
 	}
 
 	// インプットクラス

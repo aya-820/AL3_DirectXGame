@@ -45,7 +45,7 @@ void Beam::Update() {
 // 3D描画
 void Beam::Drow3D() {
 	for (int b = 0; b < 10; b++) {
-		if (beamFlag_[b] == 1) {
+		if (shotFlag[b] == 1) {
 			modelBeam_->Draw(worldTransformBeam_[b], viewProjection_, textureHandleBeam_);
 		}
 	}
@@ -54,14 +54,14 @@ void Beam::Drow3D() {
 // 移動
 void Beam::BeamMove_() {
 	for (int b = 0; b < 10; b++) {
-		if (beamFlag_[b] == 1) {
+		if (shotFlag[b] == 1) {
 			worldTransformBeam_[b].translation_.z += 0.7f;
 
 			// 回転
 			worldTransformBeam_[b].rotation_.x += 0.1f;
 
 			if (worldTransformBeam_[b].translation_.z > 40.0f) {
-				beamFlag_[b] = 0;
+				shotFlag[b] = 0;
 			}
 		}
 	}
@@ -73,11 +73,11 @@ void Beam::BeamBorn_() {
 
 	if (beamTimer_ >= 10) {
 		for (int b = 0; b < 10; b++) {
-			if (beamFlag_[b] == 0) {
+			if (shotFlag[b] == 0) {
 				if (input_->PushKey(DIK_SPACE)) {
 					worldTransformBeam_[b].translation_.x = player_->GetX();
 					worldTransformBeam_[b].translation_.z = player_->GetZ();
-					beamFlag_[b] = 1;
+					shotFlag[b] = 1;
 					beamTimer_ = 0;
 					break;
 				}

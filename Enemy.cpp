@@ -26,14 +26,14 @@ void Enemy::Update() {
 
 	// 移動
 	EnemyMove();
-	// EnemyJump();
+	EnemyJump();
 
 	// 発生
 	EnemyBorn();
 
 	for (int e = 0; e < 10; e++) {
-		if (/*input_->PushKey(DIK_E) ||*/ worldTransformEnemy_[e].translation_.z <= -10.0f) {
-		    aliveFlag_[e] = 0;
+		if (worldTransformEnemy_[e].translation_.z <= -10.0f) {
+			aliveFlag_[e] = 0;
 		}
 
 		// 変換行列を更新

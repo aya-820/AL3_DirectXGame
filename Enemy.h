@@ -33,4 +33,17 @@ private:
 	float enemyJumpSpeed_[10] = {}; // 敵ジャンプの移動速度
 
 	int gameTimer_ = 0;
+
+public:
+	// X座標の獲得
+	float GetX(int num) { return worldTransformEnemy_[num].translation_.x; }
+	// Z座標の獲得
+	float GetZ(int num) { return worldTransformEnemy_[num].translation_.z; }
+	// 存在フラグの獲得
+	int GetFlag(int num) { return aliveFlag_[num]; }
+	// 衝突処理
+	void Hit(int num, int flag) {
+		aliveFlag_[num] = flag;
+		enemyJumpSpeed_[num] = 1.0f;
+	}
 };

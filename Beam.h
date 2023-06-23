@@ -32,11 +32,21 @@ private:
 	uint32_t textureHandleBeam_ = 0;
 	Model* modelBeam_ = nullptr;
 	WorldTransform worldTransformBeam_[10];
-	int beamFlag_[10] = {};
+	int shotFlag[10] = {};
 	int beamTimer_ = 0;
 
 	// インプットクラス
 	Input* input_ = nullptr;
 	// プレイヤー
 	Player* player_ = nullptr;
+
+public:
+	// X座標の獲得
+	float GetX(int num) { return worldTransformBeam_[num].translation_.x; }
+	// Z座標の獲得
+	float GetZ(int num) { return worldTransformBeam_[num].translation_.z; }
+	// 存在フラグの獲得
+	int GetFlag(int num) { return shotFlag[num]; }
+	// 衝突処理
+	void Hit(int num) { shotFlag[num] = 0; }
 };

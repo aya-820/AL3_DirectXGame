@@ -27,6 +27,7 @@ private:
 	uint32_t textureHandlePlayer_ = 0;
 	Model* modelPlayer_ = nullptr;
 	WorldTransform worldTransformPlayer_;
+	int playerLife_ = 3;
 
 	// インプットクラス
 	Input* input_ = nullptr;
@@ -36,4 +37,8 @@ public:
 	float GetX() { return worldTransformPlayer_.translation_.x; }
 	// Z座標の獲得
 	float GetZ() { return worldTransformPlayer_.translation_.z; }
+	// 衝突処理
+	void Hit() { playerLife_--; }
+	// ライフ獲得
+	int GetLife() { return playerLife_; }
 };
