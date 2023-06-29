@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Audio.h"
-#include "DebugText.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
@@ -10,9 +9,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
-#include "Beam.h"
-#include "Enemy.h"
-#include "Player.h"
+#include "GamePlay.h"
+
 #include "stage.h"
 
 /// <summary>
@@ -58,21 +56,5 @@ private: // メンバ変数
 	// ビュープロジェクション(共通)
 	ViewProjection viewProjection_;
 
-	// 各クラス
-	Stage* stage_ = nullptr;   // ステージ
-	Player* player_ = nullptr; // プレイヤー
-	Beam* beam_ = nullptr;     // ビーム
-	Enemy* enemy_ = nullptr;   // エネミー
-
-	// 衝突判定
-	void Collision_();            // 衝突判定
-	void CollisionPlayerEnemy_(); // 衝突判定(プレイヤーとエネミー)
-	void CollisionBeamEnemy_();   // 衝突判定(ビームとエネミー)
-	int damageTimer_;             // プレイヤーダメージクールタイム用変数
-
-	// デバッグテキスト
-	DebugText* debugText_ = nullptr;
-
-	// その他
-	int gameScore_ = 0;
+	GamePlay* gamePlay_ = nullptr; // ゲームプレイ
 };

@@ -9,7 +9,7 @@ GamePlay::~GamePlay() {
 	delete enemy_;
 }
 
-void GamePlay::Initalize(ViewProjection viewProjection) { 
+void GamePlay::Initalize(ViewProjection viewProjection) {
 	viewProjection_ = viewProjection;
 
 	// ステージ
@@ -71,7 +71,6 @@ void GamePlay::GamePlayDrow2DNear_() {
 	debugText_->Print("AAA", 10, 10, 2);
 	debugText_->DrawAll();
 }
-
 
 //--------------------------------------------------
 // 衝突判定

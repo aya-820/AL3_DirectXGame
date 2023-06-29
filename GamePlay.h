@@ -29,10 +29,10 @@ private:
 	ViewProjection viewProjection_;
 
 	// 各クラス
-	Stage* stage_ = nullptr;       // ステージ
-	Player* player_ = nullptr;     // プレイヤー
-	Beam* beam_ = nullptr;         // ビーム
-	Enemy* enemy_ = nullptr;       // エネミー
+	Stage* stage_ = nullptr;   // ステージ
+	Player* player_ = nullptr; // プレイヤー
+	Beam* beam_ = nullptr;     // ビーム
+	Enemy* enemy_ = nullptr;   // エネミー
 
 	// デバッグテキスト
 	DebugText* debugText_ = nullptr;
