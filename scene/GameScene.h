@@ -10,8 +10,7 @@
 #include "WorldTransform.h"
 
 #include "GamePlay.h"
-
-#include "stage.h"
+#include "Title.h"
 
 /// <summary>
 /// ゲームシーン
@@ -57,4 +56,12 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 
 	GamePlay* gamePlay_ = nullptr; // ゲームプレイ
+	Title* title_ = nullptr;       // タイトル
+
+	enum scene {
+		gamePlay,
+		title,
+	};
+
+	int sceneMode_ = title;
 };

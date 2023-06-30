@@ -29,10 +29,23 @@ void GameScene::Initialize() {
 	gamePlay_ = new GamePlay;
 	gamePlay_->Initalize(viewProjection_);
 
+	//タイトル
+	title_ = new Title;
+	title_->Initalize();
+
 }
 
 // 更新
 void GameScene::Update() {
+	switch (sceneMode_) {
+	case gamePlay:
+		gamePlay_->GamePlayUpdate_();
+		break;
+	case	title:
+		title_->TitleUpdate_();
+		break;
+	}
+
 	gamePlay_->GamePlayUpdate_(); // ゲームプレイ
 }
 
@@ -80,7 +93,14 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
-	gamePlay_->GamePlayDrow2DNear_(); // ゲームプレイ
+	switch (sceneMode_) {
+	case gamePlay:
+		gamePlay_->GamePlayDrow2DNear_();
+		break;
+	case title:
+		title_->TitleDrow2Dnear_();
+		break;
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
