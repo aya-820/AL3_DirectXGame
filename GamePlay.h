@@ -13,10 +13,10 @@ public:
 	~GamePlay(); // デストラクタ
 
 	void Initalize(ViewProjection viewProjection); // 初期化
-	void GamePlayUpdate_();                        // ゲームプレイ更新
-	void GamePlayDrow3D_();                        // ゲームプレイ3D表示
-	void GamePlayDrow2DBack_();                    // ゲームプレイ背景2D表示
-	void GamePlayDrow2DNear_();                    // ゲームプレイ近景2D表示
+	int Update_();                        // ゲームプレイ更新
+	void Drow3D_();                        // ゲームプレイ3D表示
+	void Drow2DBack_();                    // ゲームプレイ背景2D表示
+	void Drow2DNear_();                    // ゲームプレイ近景2D表示
 
 	// 衝突判定
 	void Collision_();            // 衝突判定

@@ -37,15 +37,21 @@ void GamePlay::Initalize(ViewProjection viewProjection) {
 	gameScore_ = 0;
 }
 
-void GamePlay::GamePlayUpdate_() {
+int GamePlay::Update_() {
 	stage_->Update();  // ステージ
 	player_->Update(); // プレイヤー
 	beam_->Update();   // ビーム
 	enemy_->Update();  // エネミー
 	Collision_();      // 衝突判定
+
+	if (player_->GetLife() <= 0) {
+		return 2;
+	} else {
+		return 0;
+	}
 }
 
-void GamePlay::GamePlayDrow3D_() {
+void GamePlay::Drow3D_() {
 	stage_->Droe3D();
 	enemy_->Drow3D();
 	beam_->Drow3D();
@@ -54,11 +60,11 @@ void GamePlay::GamePlayDrow3D_() {
 	}
 }
 
-void GamePlay::GamePlayDrow2DBack_() {
+void GamePlay::Drow2DBack_() {
 	stage_->Drow2DFar(); // 背景
 }
 
-void GamePlay::GamePlayDrow2DNear_() {
+void GamePlay::Drow2DNear_() {
 	// ゲームスコア
 	char str[100];
 	sprintf_s(str, "SCORE %d", gameScore_);

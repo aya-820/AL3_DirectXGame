@@ -6,10 +6,7 @@
 GameScene::GameScene() {}
 
 // デストラクタ
-GameScene::~GameScene() 
-{ 
-	delete gamePlay_; 
-}
+GameScene::~GameScene() { delete gamePlay_; }
 
 // 初期化
 void GameScene::Initialize() {
@@ -29,24 +26,38 @@ void GameScene::Initialize() {
 	gamePlay_ = new GamePlay;
 	gamePlay_->Initalize(viewProjection_);
 
-	//タイトル
+	// タイトル
 	title_ = new Title;
 	title_->Initalize();
 
+	//ゲームオーバー
+	gameOver_ = new GameOver;
+	gameOver_->Initalize();
 }
 
 // 更新
 void GameScene::Update() {
+	int oldSceneMode = sceneMode_;
+
 	switch (sceneMode_) {
 	case gamePlay:
-		gamePlay_->GamePlayUpdate_();
+		sceneMode_=gamePlay_->Update_(); // ゲームプレイ
 		break;
-	case	title:
-		title_->TitleUpdate_();
+	case title:
+		sceneMode_ = title_->Update_(); // タイトル
+		break;
+	case gameOver:
+		sceneMode_ = gameOver_->Update_();
 		break;
 	}
 
-	gamePlay_->GamePlayUpdate_(); // ゲームプレイ
+	if (oldSceneMode!=sceneMode_) {
+		switch (sceneMode_) {
+		case gamePlay:
+			gamePlay_->Initalize(viewProjection_);
+			break;
+		}
+	}
 }
 
 // 描画
@@ -63,7 +74,7 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
-	gamePlay_->GamePlayDrow2DBack_(); // ゲームプレイ
+	gamePlay_->Drow2DBack_(); // ゲームプレイ
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -78,8 +89,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	
-	gamePlay_->GamePlayDrow3D_(); // ゲームプレイ
+
+	gamePlay_->Drow3D_(); // ゲームプレイ
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -95,10 +106,13 @@ void GameScene::Draw() {
 
 	switch (sceneMode_) {
 	case gamePlay:
-		gamePlay_->GamePlayDrow2DNear_();
+		gamePlay_->Drow2DNear_();
 		break;
 	case title:
-		title_->TitleDrow2Dnear_();
+		title_->Drow2Dnear_();
+		break;
+	case gameOver:
+		gameOver_->Drow2Dnear_();
 		break;
 	}
 

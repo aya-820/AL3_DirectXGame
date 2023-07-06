@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "MathUtilityForText.h"
@@ -7,20 +8,19 @@
 #include "Sprite.h"
 #include "WorldTransform.h"
 
-class Title {
+class GameOver {
 public:
-	Title();
-	~Title();
+	GameOver();
+	~GameOver();
 
 	void Initalize();
-	int Update_();     // タイトル更新
-	void Drow2Dnear_(); // タイトル2D
+	int Update_();
+	void Drow2Dnear_();
 
-	private:
-	// タイトル(スプライト)
-	uint32_t textureHandleTitle_ = 0;
-	Sprite* spriteTitle_ = nullptr;
-	// タイトルエンター
+private:
+	uint32_t textureHandleGameover_ = 0;
+	Sprite* spriteGameover_ = nullptr;
+
 	uint32_t textureHandleEnter_ = 0;
 	Sprite* spriteEnter_ = nullptr;
 

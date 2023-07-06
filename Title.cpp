@@ -13,14 +13,24 @@ void Title::Initalize() {
 		textureHandleEnter_ = TextureManager::Load("enter.png");
 		spriteEnter_ = Sprite::Create(textureHandleEnter_, {390, 500});
 		timer = 0;
+
+		// インプットクラス
+		input_ = Input::GetInstance();
 	}
 }
 
 // タイトル更新
-void Title::TitleUpdate_() { timer++; }
+int Title::Update_() { 
+	timer++;
+	if (input_->TriggerKey(DIK_RETURN)) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
 
 // タイトル表示
-void Title::TitleDrow2Dnear_() {
+void Title::Drow2Dnear_() {
 	spriteTitle_->Draw();
 	if (timer % 40 >= 20) {
 		spriteEnter_->Draw();
