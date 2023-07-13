@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 	title_ = new Title;
 	title_->Initalize();
 
-	//ゲームオーバー
+	// ゲームオーバー
 	gameOver_ = new GameOver;
 	gameOver_->Initalize();
 }
@@ -41,7 +41,7 @@ void GameScene::Update() {
 
 	switch (sceneMode_) {
 	case gamePlay:
-		sceneMode_=gamePlay_->Update_(); // ゲームプレイ
+		sceneMode_ = gamePlay_->Update_(); // ゲームプレイ
 		break;
 	case title:
 		sceneMode_ = title_->Update_(); // タイトル
@@ -51,10 +51,17 @@ void GameScene::Update() {
 		break;
 	}
 
-	if (oldSceneMode!=sceneMode_) {
+	if (oldSceneMode != sceneMode_) {
 		switch (sceneMode_) {
 		case gamePlay:
 			gamePlay_->Initalize(viewProjection_);
+			gamePlay_->Start_();
+			break;
+		case title:
+			title_->Start_(); // タイトル開始
+			break;
+		case gameOver:
+			gameOver_->Start_(); // ゲームオーバー開始
 			break;
 		}
 	}

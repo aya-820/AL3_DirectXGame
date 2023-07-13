@@ -32,6 +32,12 @@ void GamePlay::Initalize(ViewProjection viewProjection) {
 	debugText_ = DebugText::GetInstance();
 	debugText_->Initialize();
 
+	//BGM
+	audio_ = Audio::GetInstance();
+	soundDateHandleBGM_ = audio_->LoadWave("Audio/Ring08.wav");
+	soundDateHandleEnemyHitSE_ = audio_->LoadWave("Audio/chord.wav");
+	soundDateHandlePlayerHitSE_ = audio_->LoadWave("Audio/tada.wav");
+
 	// その他
 	damageTimer_ = 0;
 	gameScore_ = 0;
@@ -45,6 +51,10 @@ int GamePlay::Update_() {
 	Collision_();      // 衝突判定
 
 	if (player_->GetLife() <= 0) {
+		//現在のBGMを停止
+		audio_->StopWave(voiceHandleBGM_);
+
+		//ゲームオーバーへ移行
 		return 2;
 	} else {
 		return 0;
@@ -110,7 +120,7 @@ void GamePlay::CollisionPlayerEnemy_() {
 				damageTimer_ = 60;
 
 				// プレイヤーヒットSE
-				// audio_->PlayWave(soundDateHandlePlayerHitSE_);
+				audio_->PlayWave(soundDateHandlePlayerHitSE_);
 			}
 		}
 	}
@@ -134,9 +144,14 @@ void GamePlay::CollisionBeamEnemy_() {
 					gameScore_++;
 
 					// エネミーヒットSE
-					// audio_->PlayWave(soundDateHandleEnemyHitSE_);
+					audio_->PlayWave(soundDateHandleEnemyHitSE_);
 				}
 			}
 		}
 	}
+}
+
+void GamePlay::Start_() {
+//BGMを再生
+	voiceHandleBGM_ = audio_->PlayWave(soundDateHandleBGM_, true);
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "Audio.h"
 #include "Beam.h"
 #include "DebugText.h"
 #include "Enemy.h"
@@ -13,15 +14,17 @@ public:
 	~GamePlay(); // デストラクタ
 
 	void Initalize(ViewProjection viewProjection); // 初期化
-	int Update_();                        // ゲームプレイ更新
-	void Drow3D_();                        // ゲームプレイ3D表示
-	void Drow2DBack_();                    // ゲームプレイ背景2D表示
-	void Drow2DNear_();                    // ゲームプレイ近景2D表示
+	int Update_();                                 // ゲームプレイ更新
+	void Drow3D_();                                // ゲームプレイ3D表示
+	void Drow2DBack_();                            // ゲームプレイ背景2D表示
+	void Drow2DNear_();                            // ゲームプレイ近景2D表示
 
 	// 衝突判定
 	void Collision_();            // 衝突判定
 	void CollisionPlayerEnemy_(); // 衝突判定(プレイヤーとエネミー)
 	void CollisionBeamEnemy_();   // 衝突判定(ビームとエネミー)
+
+	void Start_();
 
 private:
 	// 変数
@@ -37,7 +40,15 @@ private:
 	// デバッグテキスト
 	DebugText* debugText_ = nullptr;
 
+	// BGM
+	Audio* audio_ = 0;
+	uint32_t soundDateHandleBGM_ = 0;         // ゲームプレイBGM
+	uint32_t soundDateHandleEnemyHitSE_ = 0;  // 敵ヒットSE
+	uint32_t soundDateHandlePlayerHitSE_ = 0; // プレイヤーヒットSE
+	uint32_t voiceHandleBGM_;                 // 音声再生ハンドル
+
 	// その他
 	int gameScore_ = 0;
 	int damageTimer_; // プレイヤーダメージクールタイム用変数
+
 };

@@ -15,6 +15,10 @@ void GameOver::Initalize() {
 		timer = 0;
 	}
 
+	// BGM
+	audio_ = Audio::GetInstance();
+	soundDateHandleBGM_ = audio_->LoadWave("Audio/Ring09.wav");
+
 	// インプットクラス
 	input_ = Input::GetInstance();
 }
@@ -23,12 +27,11 @@ int GameOver::Update_() {
 	timer++;
 	// エンターキーを押した瞬間
 	if (input_->TriggerKey(DIK_RETURN)) {
-		// モードをタイトルへ変更
-		return 1;
+		//
+		audio_->StopWave(voiceHandleBGM_);
 
-		// BGM切り替え
-		// audio_->StopWave(voiceHandleBGM_);                                  // 現在のBGMを停止
-		// voiceHandleBGM_ = audio_->PlayWave(soundDateHandleTitleBGM_, true); // タイトルBGMを再生
+		// タイトルへ移行
+		return 1;
 	} else {
 		return 2;
 	}
@@ -39,4 +42,9 @@ void GameOver::Drow2Dnear_() {
 	if (timer % 40 >= 20) {
 		spriteEnter_->Draw();
 	}
+}
+
+void GameOver::Start_() {
+	// BGMを再生
+	voiceHandleBGM_ = audio_->PlayWave(soundDateHandleBGM_, true);
 }
