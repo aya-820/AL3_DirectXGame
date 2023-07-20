@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "ViewProjection.h"
 #include "stage.h"
+#include "TextureManager.h"
 
 class GamePlay {
 public:
@@ -24,7 +25,8 @@ public:
 	void CollisionPlayerEnemy_(); // 衝突判定(プレイヤーとエネミー)
 	void CollisionBeamEnemy_();   // 衝突判定(ビームとエネミー)
 
-	void Start_();
+	void Start_();     // ゲーム開始
+	void DrowScore_(); // スコア表示
 
 private:
 	// 変数
@@ -47,8 +49,15 @@ private:
 	uint32_t soundDateHandlePlayerHitSE_ = 0; // プレイヤーヒットSE
 	uint32_t voiceHandleBGM_;                 // 音声再生ハンドル
 
+	// ゲームプレイUI(スプライト)
+	uint32_t textureHandleNumber_ = 0;
+	Sprite* spriteNumber_[5] = {};
+	uint32_t textureHandleScore_ = 0;
+	Sprite* spriteScore_ = nullptr;
+	uint32_t textureHandleLife_ = 0;
+	Sprite* spriteLife_[3] = {};
+
 	// その他
 	int gameScore_ = 0;
 	int damageTimer_; // プレイヤーダメージクールタイム用変数
-
 };
