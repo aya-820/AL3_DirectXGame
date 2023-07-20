@@ -36,7 +36,23 @@ void Stage::Initalize(ViewProjection viewProjection) {
 	}
 }
 
-void Stage::Update() {}
+void Stage::Update() {
+	// 各ステージでループ
+	for (int s = 0; s < 20; s++) {
+		// 手前に移動
+		worldTrandformStage_[s].translation_.z -= 0.3f;
+		// 端まで来たら奥へ戻る
+		if (worldTrandformStage_[s].translation_.z < -5) {
+			worldTrandformStage_[s].translation_.z += 40;
+		}
+		// 変換行列を更新
+		worldTrandformStage_[s].matWorld_ = MakeAffineMatrix(
+		    worldTrandformStage_[s].scale_, worldTrandformStage_[s].rotation_,
+		    worldTrandformStage_[s].translation_);
+		// 変換行列をバッファに転送
+		worldTrandformStage_[s].TransferMatrix();
+	}
+}
 
 void Stage::Drow2DFar() {
 	// 背景
