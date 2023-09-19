@@ -66,7 +66,13 @@ int GamePlay::Update_() {
 	enemy_->Update();  // エネミー
 	Collision_();      // 衝突判定
 
-	if (player_->GetLife() <= 0) {
+	if (gameScore_ >= 50) {
+		// 現在のBGMを停止
+		audio_->StopWave(voiceHandleBGM_);
+
+		// クリアへ移行
+		return 3;
+	} else if (player_->GetLife() <= 0) {
 		// 現在のBGMを停止
 		audio_->StopWave(voiceHandleBGM_);
 

@@ -1,14 +1,5 @@
 #pragma once
-
-#include "Audio.h"
-#include "DirectXCommon.h"
-#include "Input.h"
-#include "Model.h"
-#include "SafeDelete.h"
-#include "Sprite.h"
-#include "ViewProjection.h"
-#include "WorldTransform.h"
-
+#include "Clear.h"
 #include "GameOver.h"
 #include "GamePlay.h"
 #include "Title.h"
@@ -59,11 +50,13 @@ private: // メンバ変数
 	GamePlay* gamePlay_ = nullptr; // ゲームプレイ
 	Title* title_ = nullptr;       // タイトル
 	GameOver* gameOver_ = nullptr; // ゲームオーバー
+	Clear* clear_ = nullptr;       // クリア
 
 	enum scene {
 		gamePlay,
 		title,
 		gameOver,
+		clear,
 	};
 
 	int sceneMode_ = title;

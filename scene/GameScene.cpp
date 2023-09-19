@@ -49,6 +49,9 @@ void GameScene::Update() {
 	case gameOver:
 		sceneMode_ = gameOver_->Update_();
 		break;
+	case clear:
+		sceneMode_ = clear_->Update_();
+		break;
 	}
 
 	if (oldSceneMode != sceneMode_) {
@@ -62,6 +65,9 @@ void GameScene::Update() {
 			break;
 		case gameOver:
 			gameOver_->Start_(); // ゲームオーバー開始
+			break;
+		case clear:
+			clear_->Start_();
 			break;
 		}
 	}
@@ -120,6 +126,9 @@ void GameScene::Draw() {
 		break;
 	case gameOver:
 		gameOver_->Drow2Dnear_();
+		break;
+	case clear:
+		clear_->Drow2Dnear_();
 		break;
 	}
 

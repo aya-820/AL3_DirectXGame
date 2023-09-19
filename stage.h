@@ -2,7 +2,6 @@
 #include "DirectXCommon.h"
 #include "MathUtilityForText.h"
 #include "Model.h"
-#include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"

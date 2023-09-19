@@ -1,12 +1,14 @@
 #pragma once
+
 #include "Audio.h"
-#include "Beam.h"
 #include "DebugText.h"
+#include "TextureManager.h"
+#include "ViewProjection.h"
+
+#include "Beam.h"
 #include "Enemy.h"
 #include "Player.h"
-#include "ViewProjection.h"
 #include "stage.h"
-#include "TextureManager.h"
 
 class GamePlay {
 public:
@@ -47,7 +49,7 @@ private:
 	uint32_t soundDateHandleBGM_ = 0;         // ゲームプレイBGM
 	uint32_t soundDateHandleEnemyHitSE_ = 0;  // 敵ヒットSE
 	uint32_t soundDateHandlePlayerHitSE_ = 0; // プレイヤーヒットSE
-	uint32_t voiceHandleBGM_;                 // 音声再生ハンドル
+	uint32_t voiceHandleBGM_ = 0;             // 音声再生ハンドル
 
 	// ゲームプレイUI(スプライト)
 	uint32_t textureHandleNumber_ = 0;
@@ -59,5 +61,5 @@ private:
 
 	// その他
 	int gameScore_ = 0;
-	int damageTimer_; // プレイヤーダメージクールタイム用変数
+	int damageTimer_ = 0; // プレイヤーダメージクールタイム用変数
 };
