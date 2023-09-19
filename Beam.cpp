@@ -107,7 +107,7 @@ void Beam::BeamBorn_() {
 }
 
 void Beam::BeamSet(int num) {
-	if (num % 20 == 0 && num > 0) {
+	if (num % 40 == 0 && num > 0) {
 		powerNum_++;
 	}
 }

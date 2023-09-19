@@ -71,7 +71,7 @@ int GamePlay::Update_() {
 
 	beam_->BeamSet(gameScore_);
 
-	if (gameScore_ >= 100) {
+	if (gameScore_ >= 200) {
 		// 現在のBGMを停止
 		audio_->StopWave(voiceHandleBGM_);
 
