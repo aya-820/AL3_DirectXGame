@@ -33,6 +33,10 @@ void GameScene::Initialize() {
 	// ゲームオーバー
 	gameOver_ = new GameOver;
 	gameOver_->Initalize();
+
+	//クリア
+	clear_ = new Clear;
+	clear_->Initalize();
 }
 
 // 更新

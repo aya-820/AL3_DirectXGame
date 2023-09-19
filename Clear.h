@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "MathUtilityForText.h"
@@ -28,9 +28,9 @@ public:
 
 	// BGM
 	Audio* audio_ = nullptr;
-	uint32_t soundDateHandleBGM_ = 0; // ƒQ[ƒ€ƒI[ƒo[BGM
-	uint32_t voiceHandleBGM_ = 0;     // ‰¹ºÄ¶ƒnƒ“ƒhƒ‹
+	uint32_t soundDateHandleBGM_ = 0; // BGM
+	uint32_t voiceHandleBGM_ = 0;     // éŸ³å£°å†ç”Ÿãƒãƒ³ãƒ‰ãƒ«
 
-	// ƒCƒ“ƒvƒbƒgƒNƒ‰ƒX
+	// ã‚¤ãƒ³ãƒ—ãƒƒãƒˆã‚¯ãƒ©ã‚¹
 	Input* input_ = nullptr;
 };

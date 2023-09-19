@@ -1,11 +1,11 @@
-#include "Clear.h"
+ï»¿#include "Clear.h"
 
 Clear::Clear() {}
 
 Clear::~Clear() {}
 
 void Clear::Initalize() {
-	// ƒQ[ƒ€ƒNƒŠƒA
+	// ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢
 	{
 		textureHandleClear = TextureManager::Load("clear.png");
 		spriteClear = Sprite::Create(textureHandleClear, {0, 0});
@@ -19,18 +19,18 @@ void Clear::Initalize() {
 	audio_ = Audio::GetInstance();
 	soundDateHandleBGM_ = audio_->LoadWave("Audio/clear.wav");
 
-	// ƒCƒ“ƒvƒbƒgƒNƒ‰ƒX
+	// ã‚¤ãƒ³ãƒ—ãƒƒãƒˆã‚¯ãƒ©ã‚¹
 	input_ = Input::GetInstance();
 }
 
 int Clear::Update_() {
 	timer++;
-	// ƒGƒ“ƒ^[ƒL[‚ð‰Ÿ‚µ‚½uŠÔ
+	// ã‚¨ãƒ³ã‚¿ãƒ¼ã‚­ãƒ¼ã‚’æŠ¼ã—ãŸçž¬é–“
 	if (input_->TriggerKey(DIK_RETURN)) {
 		//
 		audio_->StopWave(voiceHandleBGM_);
 
-		// ƒ^ƒCƒgƒ‹‚ÖˆÚs
+		// ã‚¿ã‚¤ãƒˆãƒ«ã¸ç§»è¡Œ
 		return 1;
 	} else {
 		return 3;
@@ -44,6 +44,6 @@ void Clear::Drow2Dnear_() {
 	}
 }
 void Clear::Start_() {
-	// BGM‚ðÄ¶
-	voiceHandleBGM_ = audio_->PlayWave(soundDateHandleBGM_, true);
+	// BGMã‚’å†ç”Ÿ
+	voiceHandleBGM_ = audio_->PlayWave(soundDateHandleBGM_, true,0.2f);
 }
