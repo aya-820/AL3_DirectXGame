@@ -14,11 +14,15 @@ void Beam::Initalize(ViewProjection viewProjection, Player* player) {
 
 	textureHandleBeam_ = TextureManager::Load("beam.png");
 	modelBeam_ = Model::Create();
-	for (int b = 0; b < 10; b++) {
+	for (int b = 0; b < beamNum_; b++) {
 		worldTransformBeam_[b].scale_ = {0.5f, 0.5f, 0.5f};
 		worldTransformBeam_[b].Initialize();
 	}
 	beamTimer_ = 0;
+	powerBeamFlag_ = 0;
+	powerNum_ = 0;
+	powerTimer_ = 0;
+	speed_ = speedIni_;
 
 	// インプットクラス
 	input_ = Input::GetInstance();
@@ -32,7 +36,7 @@ void Beam::Update() {
 	// 発生
 	BeamBorn_();
 
-	for (int b = 0; b < 10; b++) {
+	for (int b = 0; b < beamNum_; b++) {
 		// 変換行列を更新
 		worldTransformBeam_[b].matWorld_ = MakeAffineMatrix(
 		    worldTransformBeam_[b].scale_, worldTransformBeam_[b].rotation_,
@@ -44,7 +48,7 @@ void Beam::Update() {
 
 // 3D描画
 void Beam::Drow3D() {
-	for (int b = 0; b < 10; b++) {
+	for (int b = 0; b < beamNum_; b++) {
 		if (shotFlag[b] == 1) {
 			modelBeam_->Draw(worldTransformBeam_[b], viewProjection_, textureHandleBeam_);
 		}
@@ -53,9 +57,9 @@ void Beam::Drow3D() {
 
 // 移動
 void Beam::BeamMove_() {
-	for (int b = 0; b < 10; b++) {
+	for (int b = 0; b < beamNum_; b++) {
 		if (shotFlag[b] == 1) {
-			worldTransformBeam_[b].translation_.z += 0.7f;
+			worldTransformBeam_[b].translation_.z += speed_;
 
 			// 回転
 			worldTransformBeam_[b].rotation_.x += 0.1f;
@@ -71,8 +75,24 @@ void Beam::BeamMove_() {
 void Beam::BeamBorn_() {
 	beamTimer_++;
 
-	if (beamTimer_ >= 10) {
-		for (int b = 0; b < 10; b++) {
+	if (powerBeamFlag_ == 1) {
+		powerTimer_--;
+
+		if (powerTimer_ <= 0) {
+			powerBeamFlag_ = 0;
+			speed_ = speedIni_;
+		}
+	}
+
+	if (powerNum_ > 0 && input_->PushKey(DIK_X)) {
+		powerBeamFlag_ = 1;
+		powerTimer_ = powerTimeMax_;
+		speed_ = powerSpeed_;
+		powerNum_--;
+	}
+
+	if (beamTimer_ >= beamTimeMax_ || powerBeamFlag_ == 1) {
+		for (int b = 0; b < beamNum_; b++) {
 			if (shotFlag[b] == 0) {
 				if (input_->PushKey(DIK_SPACE)) {
 					worldTransformBeam_[b].translation_.x = player_->GetX();
@@ -83,5 +103,11 @@ void Beam::BeamBorn_() {
 				}
 			}
 		}
+	}
+}
+
+void Beam::BeamSet(int num) {
+	if (num % 20 == 0 && num > 0) {
+		powerNum_++;
 	}
 }

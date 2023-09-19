@@ -58,6 +58,8 @@ private:
 	Sprite* spriteScore_ = nullptr;
 	uint32_t textureHandleLife_ = 0;
 	Sprite* spriteLife_[3] = {};
+	uint32_t textureHandleEXBeam_ = 0;
+	Sprite* spriteEXBeam_ = nullptr;
 
 	// その他
 	int gameScore_ = 0;

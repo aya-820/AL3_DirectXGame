@@ -54,6 +54,9 @@ void GamePlay::Initalize(ViewProjection viewProjection) {
 		spriteLife_[i]->SetSize({40, 40});
 	}
 
+	textureHandleEXBeam_ = TextureManager::Load("go.png");
+	spriteEXBeam_ = Sprite::Create(textureHandleEXBeam_, {1000, 0});
+
 	// その他
 	damageTimer_ = 0;
 	gameScore_ = 0;
@@ -66,7 +69,9 @@ int GamePlay::Update_() {
 	enemy_->Update();  // エネミー
 	Collision_();      // 衝突判定
 
-	if (gameScore_ >= 50) {
+	beam_->BeamSet(gameScore_);
+
+	if (gameScore_ >= 100) {
 		// 現在のBGMを停止
 		audio_->StopWave(voiceHandleBGM_);
 
@@ -105,6 +110,10 @@ void GamePlay::Drow2DNear_() {
 	// ライフ表示
 	for (int i = 0; i < player_->GetLife(); i++) {
 		spriteLife_[i]->Draw();
+	}
+
+	if (beam_->GetPower() > 0) {
+		spriteEXBeam_->Draw();
 	}
 }
 
@@ -150,7 +159,7 @@ void GamePlay::CollisionPlayerEnemy_() {
 void GamePlay::CollisionBeamEnemy_() {
 
 	for (int e = 0; e < 10; e++) {
-		for (int b = 0; b < 10; b++) {
+		for (int b = 0; b < beamNum_; b++) {
 			if (beam_->GetFlag(b) == 1 && enemy_->GetFlag(e) == 1) {
 				// 差を求める
 				float dx = abs(beam_->GetX(b) - enemy_->GetX(e));
